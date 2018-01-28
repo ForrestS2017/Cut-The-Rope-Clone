@@ -7,6 +7,7 @@ public class Rope : MonoBehaviour
     public Rigidbody2D hook;        // A reference to the initial hook
     public GameObject linkPrefab;   // A reference for spawning the link prefabs
     public int links = 7;           // Default count for links in chain
+    public Weight weight;           // The weight we will add to the end of our chain
 
     // Use this for initialization
     void Start()
@@ -24,8 +25,15 @@ public class Rope : MonoBehaviour
             link = Instantiate(linkPrefab, transform);
             HingeJoint2D joint = link.GetComponent<HingeJoint2D>();
             joint.connectedBody = previousRB;                       // Connect the new link to the previous body. First time will be hook, afterwards is below
-
-            previousRB = link.GetComponent<Rigidbody2D>();          // Link we just made is new previous body
+            
+            if (i < links -1)
+            {
+                previousRB = link.GetComponent<Rigidbody2D>();          // Link we just made is new previous body
+            }
+            else
+            {
+                weight.ConnectRopeEnd(link.GetComponent<Rigidbody2D>());
+            }
         }
     }
 }
